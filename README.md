@@ -4,7 +4,11 @@ Aplicación Android en Java para el reto **Menus and Dialog Boxes** de Frank McC
 
 ## Ejecutar
 
-Abre esta carpeta en Android Studio, sincroniza Gradle y ejecuta `app` en un emulador o teléfono con Android 7.0 o posterior. Requiere SDK 37 y JDK 17 o posterior; se puede usar el JDK incluido con Android Studio.
+Abre esta carpeta como proyecto Gradle en Android Studio, sincroniza y ejecuta `app` en un emulador o teléfono con Android 7.0 o posterior. Requiere SDK 37 y JDK 17 o posterior; se puede usar el JDK incluido con Android Studio.
+
+Si aparece **Module not specified** y el panel Gradle está vacío, la carpeta aún no se ha importado como proyecto Android. Cierra la configuración de ejecución y usa **File > Open** para abrir `settings.gradle.kts` como proyecto. Espera a que termine la sincronización. En **Run > Edit Configurations > app**, selecciona el módulo `Reto4MenusyDialogos.app` (o el módulo `app` que muestre el IDE), con **Launch: Default Activity**. No basta con crear una configuración de ejecución antes de importar Gradle.
+
+Para ver el emulador dentro del IDE, abre **View > Tool Windows > Running Devices** y ejecútalo desde **Device Manager**. Selecciona **Small Phone**, la configuración **app** y pulsa **Run**.
 
 En Windows, con `JAVA_HOME` configurado:
 
@@ -23,7 +27,9 @@ APK: `app/build/outputs/apk/debug/app-debug.apk`.
 - Selector de dificultad con la opción actual marcada, cierre al elegir y Toast de confirmación. La elección se conserva al cerrar la aplicación.
 - Salir muestra confirmación Sí/No. Acerca de utiliza un diseño XML personalizado.
 - Icono propio y recursos vectoriales escalables en lugar de los PNG del tutorial antiguo.
-- Marcador de la sesión y conservación del tablero y turno al girar el dispositivo. Nueva partida conserva el marcador.
+- Pantalla con el estilo del PDF: fondo oscuro, cabecera gris, tablero de casillas blancas/grises, X verdes, O rojas y tres botones de menú en la parte inferior.
+- Conservación del tablero y turno al girar el dispositivo.
+- El título AndroidTicTacToe abre Acerca de.
 - Los diálogos se crean con AlertDialog.Builder, sin los métodos obsoletos showDialog/onCreateDialog del documento.
 
 ## Archivos principales
@@ -37,9 +43,9 @@ APK: `app/build/outputs/apk/debug/app-debug.apk`.
 
 ## Revisión manual
 
-1. Abrir el menú de tres puntos y comprobar las cuatro opciones.
+1. Comprobar las tres opciones del menú inferior; tocar el título para abrir Acerca de.
 2. Elegir cada dificultad, comprobar el Toast y volver a abrir el selector para verificar la selección.
-3. Jugar hasta ganar, perder o empatar; comprobar el marcador y comenzar otra partida.
+3. Jugar hasta ganar, perder o empatar; comprobar el mensaje y comenzar otra partida.
 4. Girar el dispositivo durante el turno de la computadora: debe conservar el tablero y realizar una sola jugada.
 5. Comprobar Acerca de y probar tanto No como Sí en Salir.
 

@@ -5,7 +5,7 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.content.res.ColorStateList;
+
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
@@ -20,8 +20,7 @@ public class MainActivity extends Activity {
     private final TicTacToeGame game = new TicTacToeGame();
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Button[] cells = new Button[9];
-    private TextView status, score;
-    private Button difficulty;
+    private TextView status;
     private boolean computerTurn;
     private int wins, draws, losses;
     private AlertDialog dialog;
@@ -44,36 +43,28 @@ public class MainActivity extends Activity {
         }
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
-        root.setBackgroundColor(Color.rgb(245,243,238));
+        root.setBackgroundColor(Color.rgb(24,24,24));
         root.setOnApplyWindowInsetsListener((view, insets) -> {
             view.setPadding(insets.getSystemWindowInsetLeft(), insets.getSystemWindowInsetTop(),
                     insets.getSystemWindowInsetRight(), insets.getSystemWindowInsetBottom());
             return insets;
         });
         setContentView(root);
-        Toolbar toolbar = new Toolbar(this);
-        toolbar.setTitle(R.string.app_name);
-        toolbar.setTitleTextColor(Color.rgb(24,59,53));
-        root.addView(toolbar, new LinearLayout.LayoutParams(-1, dp(56)));
-        setActionBar(toolbar);
+        TextView title = label("AndroidTicTacToe", 14, true);
+        title.setGravity(Gravity.CENTER_VERTICAL);
+        title.setPadding(dp(8), 0, 0, 0);
+        title.setBackground(new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+                new int[]{0xffaaaaaa, 0xff555555}));
+        title.setOnClickListener(v -> showAbout());
+        title.setContentDescription(getString(R.string.about));
+        root.addView(title, new LinearLayout.LayoutParams(-1, dp(32)));
         ScrollView scroll = new ScrollView(this);
+        scroll.setFillViewport(true);
         root.addView(scroll, new LinearLayout.LayoutParams(-1, 0, 1));
         LinearLayout content = new LinearLayout(this);
         content.setOrientation(LinearLayout.VERTICAL);
-        content.setGravity(Gravity.CENTER_HORIZONTAL);
-        content.setPadding(dp(24), dp(20), dp(24), dp(24));
+        content.setPadding(dp(6), dp(6), dp(6), 0);
         scroll.addView(content);
-        content.addView(label(getString(R.string.eyebrow), 11, false));
-        TextView title = label(getString(R.string.title), 36, true);
-        title.setPadding(0, dp(12), 0, dp(6)); content.addView(title);
-        content.addView(label(getString(R.string.subtitle), 14, false));
-        difficulty = new Button(this);
-        difficulty.setAllCaps(false);
-        difficulty.setOnClickListener(v -> showDifficulty());
-        LinearLayout.LayoutParams chip = new LinearLayout.LayoutParams(-2, dp(52));
-        chip.topMargin = dp(16); content.addView(difficulty, chip);
-        TextView players = label(getString(R.string.players), 13, true);
-        players.setPadding(0, dp(20), 0, dp(16)); content.addView(players);
         LinearLayout board = new LinearLayout(this);
         board.setOrientation(LinearLayout.VERTICAL);
         content.addView(board, new LinearLayout.LayoutParams(-1, -2));
@@ -84,11 +75,11 @@ public class MainActivity extends Activity {
                 final int position = row * 3 + col;
                 Button cell = new Button(this) {
                     @Override protected void onMeasure(int widthSpec, int heightSpec) {
-                        int size = Math.min(MeasureSpec.getSize(widthSpec), dp(128));
+                        int size = Math.min(MeasureSpec.getSize(widthSpec), dp(160));
                         super.onMeasure(widthSpec, MeasureSpec.makeMeasureSpec(size, MeasureSpec.EXACTLY));
                     }
                 };
-                cell.setTextSize(36); cell.setTypeface(null, Typeface.BOLD);
+                cell.setTextSize(54); cell.setTypeface(Typeface.SANS_SERIF, Typeface.NORMAL);
                 cell.setPadding(0, 0, 0, 0); cell.setMinWidth(0); cell.setMinimumWidth(0);
                 cell.setOnClickListener(v -> play(position));
                 LinearLayout.LayoutParams tile = new LinearLayout.LayoutParams(0, -2, 1);
@@ -96,26 +87,37 @@ public class MainActivity extends Activity {
                 line.addView(cell, tile); cells[position] = cell;
             }
         }
-        status = label("", 19, true);
+        status = label("", 16, false);
         status.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);
-        status.setPadding(0, dp(22), 0, dp(10)); content.addView(status);
-        score = label("", 14, false); content.addView(score);
-        Button restart = new Button(this);
-        restart.setText(R.string.new_game); restart.setAllCaps(false);
-        restart.setTextColor(Color.WHITE);
-        restart.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(23,107,89)));
-        restart.setOnClickListener(v -> startNewGame());
-        LinearLayout.LayoutParams restartParams = new LinearLayout.LayoutParams(-1, dp(56));
-        restartParams.topMargin = dp(22); content.addView(restart, restartParams);
-        TextView hint = label(getString(R.string.hint), 12, false);
-        hint.setPadding(0, dp(14), 0, 0); content.addView(hint);
+        status.setPadding(dp(8), dp(20), dp(8), dp(20));
+        content.addView(status, new LinearLayout.LayoutParams(-1, 0, 1));
+        // Recreate the three-item menu from the tutorial, using its XML definitions.
+        PopupMenu menu = new PopupMenu(this, title);
+        getMenuInflater().inflate(R.menu.options_menu, menu.getMenu());
+        LinearLayout bottom = new LinearLayout(this);
+        root.addView(bottom, new LinearLayout.LayoutParams(-1, -2));
+        for (int id : new int[]{R.id.new_game, R.id.ai_difficulty, R.id.quit}) {
+            MenuItem item = menu.getMenu().findItem(id);
+            Button action = new Button(this);
+            action.setText(item.getTitle()); action.setAllCaps(false); action.setTextSize(12);
+            action.setTextColor(Color.BLACK); action.setPadding(dp(2), dp(6), dp(2), dp(6));
+            android.graphics.drawable.Drawable icon = item.getIcon();
+            if (icon != null) icon.setBounds(0, 0, dp(28), dp(28));
+            action.setCompoundDrawables(null, icon, null, null);
+            action.setBackground(new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+                    new int[]{0xffffffff, 0xffb7b7b7}));
+            action.setOnClickListener(v -> onOptionsItemSelected(item));
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, dp(68), 1);
+            params.setMargins(dp(1), dp(1), dp(1), 0);
+            bottom.addView(action, params);
+        }
         render();
     }
 
     private TextView label(String text, int size, boolean bold) {
         TextView view = new TextView(this);
         view.setText(text); view.setTextSize(size); view.setGravity(Gravity.CENTER);
-        view.setTextColor(Color.rgb(24,59,53));
+        view.setTextColor(Color.LTGRAY);
         if (bold) view.setTypeface(null, Typeface.BOLD);
         return view;
     }
@@ -147,19 +149,18 @@ public class MainActivity extends Activity {
             char mark = game.at(i);
             cells[i].setText(mark == ' ' ? "" : String.valueOf(mark));
             cells[i].setEnabled(result == 0 && !computerTurn && mark == ' ');
-            cells[i].setTextColor(mark == 'X' ? Color.rgb(23,107,89) : Color.rgb(191,90,55));
+            cells[i].setTextColor(mark == 'X' ? Color.rgb(0,220,0) : Color.RED);
             boolean highlight = false;
             for (int index : winning) if (index == i) highlight = true;
-            GradientDrawable background = new GradientDrawable();
-            background.setColor(highlight ? Color.rgb(211,235,217) : Color.WHITE);
-            background.setCornerRadius(dp(16)); background.setStroke(dp(1), Color.rgb(222,226,219));
+            GradientDrawable background = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+                    mark == ' ' ? new int[]{0xffffffff, 0xffeeeeee} : new int[]{0xffc7c7c7, 0xff999999});
+            background.setCornerRadius(dp(2)); background.setStroke(dp(2), highlight ? 0xffeeeeee : 0xff777777);
             cells[i].setBackground(background);
             cells[i].setContentDescription(getString(R.string.cell, i / 3 + 1, i % 3 + 1,
                     mark == ' ' ? getString(R.string.empty) : String.valueOf(mark)));
         }
         status.setText(result == 1 ? R.string.draw : result == 2 ? R.string.win : result == 3 ? R.string.lose : computerTurn ? R.string.thinking : R.string.your_turn);
-        score.setText(getString(R.string.score, wins, draws, losses));
-        difficulty.setText(getString(R.string.difficulty_changed, getResources().getStringArray(R.array.difficulty_levels)[game.getDifficultyLevel().ordinal()]));
+
     }
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.options_menu, menu); return true;
@@ -169,12 +170,14 @@ public class MainActivity extends Activity {
         if (id == R.id.new_game) startNewGame();
         else if (id == R.id.ai_difficulty) showDifficulty();
         else if (id == R.id.quit) showQuit();
-        else if (id == R.id.about) {
-            dismissDialog();
-            dialog = new AlertDialog.Builder(this).setView(R.layout.about_dialog)
-                    .setPositiveButton(R.string.ok, null).show();
-        } else return super.onOptionsItemSelected(item);
+        else if (id == R.id.about) showAbout();
+        else return super.onOptionsItemSelected(item);
         return true;
+    }
+    private void showAbout() {
+        dismissDialog();
+        dialog = new AlertDialog.Builder(this).setView(R.layout.about_dialog)
+                .setPositiveButton(R.string.ok, null).show();
     }
     private void dismissDialog() { if (dialog != null) dialog.dismiss(); }
     private void showDifficulty() {
