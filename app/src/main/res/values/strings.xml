@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Triqui · Reto 4</string>
+    <string name="new_game">Nueva partida</string>
+    <string name="difficulty">Dificultad</string>
+    <string name="quit">Salir</string>
+    <string name="about">Acerca de</string>
+    <string name="difficulty_choose">Elige la dificultad</string>
+    <string-array name="difficulty_levels"><item>Fácil</item><item>Difícil</item><item>Experto</item></string-array>
+    <string name="difficulty_changed">Dificultad: %1$s</string>
+    <string name="quit_question">¿Quieres salir del juego?</string>
+    <string name="quit_detail">La partida actual terminará.</string>
+    <string name="yes">Sí, salir</string>
+    <string name="no">No, continuar</string>
+    <string name="ok">Entendido</string>
+    <string name="eyebrow">RETO 04 / MENÚS Y DIÁLOGOS</string>
+    <string name="title">Tres en línea.</string>
+    <string name="subtitle">Un tablero. Nueve casillas. Tu próxima jugada.</string>
+    <string name="players">TÚ  ×                         COMPUTADORA  ○</string>
+    <string name="your_turn">Tu turno. Coloca una X.</string>
+    <string name="thinking">La computadora está pensando…</string>
+    <string name="win">¡Ganaste! Tres en línea.</string>
+    <string name="lose">La computadora gana. ¡Inténtalo otra vez!</string>
+    <string name="draw">¡Empate! Vamos por la revancha.</string>
+    <string name="score">Tú  %1$d     ·     Empates  %2$d     ·     CPU  %3$d</string>
+    <string name="hint">Forma una línea horizontal, vertical o diagonal.</string>
+    <string name="cell">Fila %1$d, columna %2$d: %3$s</string>
+    <string name="empty">vacía</string>
+    <string name="about_title">Triqui</string>
+    <string name="about_body">Reto 4 · Menús y cuadros de diálogo\nVersión 1.0\n\nDesarrollo: proyecto académico asistido por Codex.\n\nBasado en el reto de Frank McCown, Harding University (CC BY 3.0).\n\nFácil: juega al azar.\nDifícil: intenta ganar; si no puede, juega al azar.\nExperto: intenta ganar, bloquea y luego juega al azar.</string>
+</resources>

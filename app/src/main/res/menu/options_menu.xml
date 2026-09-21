@@ -1,0 +1,6 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/new_game" android:title="@string/new_game" android:icon="@drawable/new_game" android:showAsAction="never" />
+    <item android:id="@+id/ai_difficulty" android:title="@string/difficulty" android:icon="@drawable/difficulty_level" android:showAsAction="never" />
+    <item android:id="@+id/about" android:title="@string/about" android:icon="@drawable/icon" android:showAsAction="never" />
+    <item android:id="@+id/quit" android:title="@string/quit" android:icon="@drawable/quit_game" android:showAsAction="never" />
+</menu>
