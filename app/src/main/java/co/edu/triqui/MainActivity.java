@@ -102,7 +102,7 @@ public class MainActivity extends Activity {
             action.setText(item.getTitle()); action.setAllCaps(false); action.setTextSize(12);
             action.setTextColor(Color.BLACK); action.setPadding(dp(2), dp(6), dp(2), dp(6));
             android.graphics.drawable.Drawable icon = item.getIcon();
-            if (icon != null) icon.setBounds(0, 0, dp(28), dp(28));
+            if (icon != null) icon.setBounds(0, 0, dp(36), dp(36));
             action.setCompoundDrawables(null, icon, null, null);
             action.setBackground(new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
                     new int[]{0xffffffff, 0xffb7b7b7}));
